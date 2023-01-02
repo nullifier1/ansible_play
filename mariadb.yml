@@ -1,0 +1,53 @@
+---
+- hosts: mariadb
+  become: true
+  tasks:
+    - name: Update apt
+      apt:
+        upgrade: yes
+        update_cache: yes
+        cache_valid_time: 86400
+    - name: Install pip
+      apt:
+        name: python3-pip
+        state: present
+
+    - name: Install PyMySQL
+      pip:
+        name: pymysql
+        state: present
+
+    - name: Install MariaDB
+      apt:
+        name: mariadb-server
+        state: present
+    - name: Start MariaDB
+      service:
+        name: mysql
+        state: started
+    - name: Create Gogs database
+      mysql_db:
+        login_unix_socket: /var/run/mysqld/mysqld.sock
+        name: gogs
+        state: present
+    - name: Create Gogs user
+      mysql_user:
+        login_unix_socket: /var/run/mysqld/mysqld.sock
+        name: gogs
+        password: gogs
+        host: "%"
+        priv: "*.*:ALL"
+        state: present
+    - name: Set MariaDB bind address
+      lineinfile:
+        path: /etc/mysql/mariadb.conf.d/50-server.cnf
+        regexp: "bind-address.*"
+        line: "bind-address=0.0.0.0"
+      notify:
+        - restart mysql
+  handlers:
+    - name: restart mysql
+      service:
+        name: mysql
+        state: restarted
+

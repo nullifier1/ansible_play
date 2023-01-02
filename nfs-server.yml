@@ -1,0 +1,30 @@
+---
+- hosts: nfs-server
+  become: true
+  tasks:
+    - name: Update apt
+      apt:
+        upgrade: yes
+        update_cache: yes
+        cache_valid_time: 86400
+    - name: Install NFS server package
+      apt:
+        name: nfs-kernel-server
+        state: present
+    - name: Create shared directory
+      file:
+        path: /home/vagrant/gogs-repositories
+        owner: vagrant
+        group: vagrant
+        mode: 0775
+        state: directory
+    - name: Add shared directory to exports
+      lineinfile:
+        path: /etc/exports
+        line: "/home/vagrant/gogs-repositories 192.168.13.140(rw,sync,no_subtree_check)"
+        state: present
+    - name: Restart NFS server
+      service:
+        name: nfs-kernel-server
+        state: restarted
+

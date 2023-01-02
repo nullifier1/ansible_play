@@ -1,0 +1,24 @@
+- hosts: nfs-client
+  become: true
+  tasks:
+    - name: Update apt
+      apt:
+        upgrade: yes
+        update_cache: yes
+        cache_valid_time: 86400
+    - name: Install NFS client package
+      apt:
+        name: nfs-common
+        state: present
+    - name: Create mount point
+      file:
+        path: /home/vagrant/gogs-repositories
+        state: directory
+    - name: Mount NFS share
+      mount:
+        path: /home/vagrant/gogs-repositories
+        src: "192.168.13.132:/home/vagrant/gogs-repositories"
+        fstype: nfs
+        state: mounted
+        opts: rw,sync,hard,intr
+
