@@ -1,8 +1,6 @@
 ---
-- hosts: nfs-server
-  become: true
-  tasks:
     - name: Update apt
+      become: yes
       apt:
         update_cache: yes
         cache_valid_time: 86400
@@ -12,15 +10,15 @@
         state: present
     - name: Create shared directory
       file:
-        path: /home/vagrant/gogs-repositories
-        owner: vagrant
-        group: vagrant
+        path: "{{ nfs_shared_dir }}"
+        owner: "{{ nfs_user }}"
+        group: "{{ nfs_group }}"
         mode: 0775
         state: directory
     - name: Add shared directory to exports
       lineinfile:
         path: /etc/exports
-        line: "/home/vagrant/gogs-repositories 192.168.13.140(rw,sync,no_subtree_check)"
+        line: "{{ nfs_shared_dir }} {{ nfs_server_ip }}(rw,sync,no_subtree_check)"
         state: present
     - name: Restart NFS server
       service:

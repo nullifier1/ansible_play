@@ -1,0 +1,20 @@
+---
+- hosts: nfs-server
+  become: yes
+  roles:
+    - nfs-server
+
+- hosts: nfs-client
+  become: yes
+  roles:
+    - nfs-client
+
+- hosts: mariadb
+  become: yes
+  roles:
+    - mariadb
+
+- hosts: load-balancer
+  become: yes
+  roles:
+    - load-balancer

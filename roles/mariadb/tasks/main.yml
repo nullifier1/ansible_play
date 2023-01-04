@@ -1,7 +1,4 @@
 ---
-- hosts: mariadb
-  become: true
-  tasks:
     - name: Update apt
       apt:
         update_cache: yes
@@ -24,28 +21,31 @@
       service:
         name: mysql
         state: started
-    - name: Create Gogs database
+    - name: Create MariaDb database
       mysql_db:
         login_unix_socket: /var/run/mysqld/mysqld.sock
-        name: gogs
+        name: "{{ mariadb_database }}"
         state: present
-    - name: Create Gogs user
+    - name: Create MariaDB user
       mysql_user:
         login_unix_socket: /var/run/mysqld/mysqld.sock
-        name: gogs
-        password: gogs
+        name: "{{ mariadb_user }}"
+        password: "{{ mariadb_password }}"
         host: "%"
         priv: "*.*:ALL"
+        state: present
+    - name: Grant all privileges to MariaDB user
+      mysql_user:
+        login_unix_socket: /var/run/mysqld/mysqld.sock
+        name: "{{ mariadb_user }}"
+        priv: "{{ mariadb_database }}.*:ALL"
         state: present
     - name: Set MariaDB bind address
       lineinfile:
         path: /etc/mysql/mariadb.conf.d/50-server.cnf
         regexp: "bind-address.*"
         line: "bind-address=0.0.0.0"
-      notify:
-        - restart mysql
-  handlers:
-    - name: restart mysql
+    - name: Restart mysql
       service:
         name: mysql
         state: restarted

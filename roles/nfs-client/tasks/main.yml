@@ -1,6 +1,4 @@
-- hosts: nfs-client
-  become: true
-  tasks:
+---
     - name: Update apt
       apt:
         update_cache: yes
@@ -11,12 +9,15 @@
         state: present
     - name: Create mount point
       file:
-        path: /home/vagrant/gogs-repositories
+        path: "{{ nfs_mount_point }}"
         state: directory
+        owner: "{{ nfs_user }}"
+        group: "{{ nfs_group }}"
+        mode: 0775
     - name: Mount NFS share
       mount:
-        path: /home/vagrant/gogs-repositories
-        src: "192.168.13.132:/home/vagrant/gogs-repositories"
+        path: "{{ nfs_mount_point }}"
+        src: "{{ nfs_server_ip }}:{{ nfs_shared_dir }}"
         fstype: nfs
         state: mounted
         opts: rw,sync,hard,intr

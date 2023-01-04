@@ -1,7 +1,4 @@
 ---
-- hosts: load-balancer
-  become: true
-  tasks:
     - name: Update apt
       apt:
         update_cache: yes
@@ -18,5 +15,8 @@
       template:
         src: load_balancer.conf.j2
         dest: /etc/nginx/conf.d/load_balancer.conf
+      vars:
+        app1_ip: 192.168.13.140
+        app2_ip: 192.168.13.141
     - name: Restart nginx
       service: name=nginx state=restarted enabled=yes
