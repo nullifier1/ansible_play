@@ -1,5 +1,5 @@
 nfs_shared_dir: "/home/vagrant/gogs-repositories"
 nfs_user: "vagrant"
 nfs_group: "vagrant"
-nfs_server_ip: "192.168.13.140"
+nfs_clien_ip: "192.168.13.140"
 

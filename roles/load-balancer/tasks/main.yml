@@ -17,6 +17,6 @@
         dest: /etc/nginx/conf.d/load_balancer.conf
       vars:
         app1_ip: 192.168.13.140
-        app2_ip: 192.168.13.141
+        app2_ip: 192.168.13.140
     - name: Restart nginx
       service: name=nginx state=restarted enabled=yes

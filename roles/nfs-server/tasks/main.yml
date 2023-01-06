@@ -18,7 +18,7 @@
     - name: Add shared directory to exports
       lineinfile:
         path: /etc/exports
-        line: "{{ nfs_shared_dir }} {{ nfs_server_ip }}(rw,sync,no_subtree_check)"
+        line: "{{ nfs_shared_dir }} {{ nfs_client_ip }}(rw,sync,no_subtree_check)"
         state: present
     - name: Restart NFS server
       service:

@@ -1,0 +1,54 @@
+---
+- name: Deploy jenkins
+  tasks:
+    - name: install Java
+      apt:
+        name: default-jdk
+        state: present
+    - name: add jenkins repo
+      shell: curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo tee \  /usr/share/keyrings/jenkins-keyring.asc > /dev/null
+    - name: update jenkins
+      shell: echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] \  https://pkg.jenkins.io/debian-stable binary/ | sudo tee \  /etc/apt/sources.list.d/jenkins.list > /dev/null
+    - name: update apt
+      apt:
+        update_cache: yes
+    - name: Install Jenkins
+      apt:
+        name: jenkins
+        state: present
+      tags:
+        - jenkins
+    - name: Copy jenkins conf
+      copy:
+        src: ~/jenkins-config.tar.gz
+        dest: ~/jenkins-config.tar.gz
+    - name: Copy jenkins home
+      copy:
+        src: ~/jenkins-home.tar.gz
+        dest: ~/jenkins-home.tar.gz
+    - name: Stop Jenkins service
+      service:
+        name: jenkins
+        state: stopped
+    - name: Remove existing Jenkins home directory
+      file:
+        path: /var/lib/jenkins/home
+        state: absent
+    - name: Extract Jenkins home directory from backup
+      shell: tar xzf ~/jenkins-home.tar.gz -C /
+    - name: Remove existing Jenkins configuration files
+      file:
+        path: /etc/default/jenkins
+        state: absent
+      file:
+        path: /etc/sysconfig/jenkins
+        state: absent
+      file:
+        path: /etc/init.d/jenkins
+        state: absent
+    - name: Extract Jenkins configuration files from backup
+      shell: tar xzf ~/jenkins-config.tar.gz -C /
+    - name: Start Jenkins service
+      service:
+        name: jenkins
+        state: started
