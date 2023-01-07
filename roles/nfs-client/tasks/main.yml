@@ -21,4 +21,21 @@
         fstype: nfs
         state: mounted
         opts: rw,sync,hard,intr
-
+    - name: install gogs
+      copy:
+        src: ~/gogs
+        dest: ~/gogs
+    - name: create directory custom
+      file:
+        path: ~/custom
+        state: directory
+    - name: create directory conf
+      file:
+        path: ~/custom/conf
+        state: directory
+    - name: install gogs conf
+      template: 
+        src: app.ini.j2
+        dest: ~/custom/conf/app.ini
+      vars:
+        mariadb_ip = 10.10.10.10
