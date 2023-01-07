@@ -1,5 +1,4 @@
 [mariadb]
-
 192.168.13.131
 
 [nfs-server]
@@ -7,9 +6,13 @@
 
 [nfs-client]
 192.168.13.140
+192.168.13.141
 
 [load-balancer]
 192.168.13.135
 
 [jenkins]
 192.168.13.99
+
+[jenkins-agent]
+192.168.13.100

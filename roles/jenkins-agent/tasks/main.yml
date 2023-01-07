@@ -1,0 +1,11 @@
+---
+- name: Deploy jenkins-agent
+  tasks:
+    - name: update apt
+      apt:
+        update_cache: yes
+    - name: install jdk
+      apt:
+        name: default-jdk
+        state: present
+
