@@ -1,5 +1,5 @@
-nfs_mount_point: "~/gogs-repositories"
+nfs_mount_point: "/home/user/gogs-repositories"
 nfs_server_ip: "10.26.0.71"
-nfs_shared_dir: "~/gogs-repositories"
+nfs_shared_dir: "/home/user/gogs-repositories"
 nfs_user: "user"
 nfs_group: "user"

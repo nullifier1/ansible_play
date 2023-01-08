@@ -16,7 +16,10 @@
         state: present
       vars:
         ansible_python_interpreter: /usr/bin/python3
-
+    - name: curl mariadb
+      shell: curl -LsS https://downloads.mariadb.com/MariaDB/mariadb_repo_setup
+    - name: add mariadb to yum
+      shell: sudo bash mariadb_repo_setup --mariadb-server-version=10.6
     - name: Install MariaDB
       yum:
         name: mariadb-server
@@ -53,10 +56,30 @@
         line: "bind-address=0.0.0.0"
         state: present
     - name: enable access to port 3306
-      shell: firewall-cmd --zone=public --add-port=3306/tpc --permanent
+      shell: firewall-cmd --zone=public --add-port=3306/tcp --permanent
     - name: reload firewall
       shell: firewall-cmd --reload
     - name: Restart mysql
+    - name: add required confs
+      lineinfile:
+        path: /etc/my.cnf
+        line: "innodb_default_row_format=dynamic"
+        state: present
+    - name: add conf 2
+      lineinfile:
+        path: /etc/my.cnf
+        line: "innodb_file_format=barracuda"
+        state: present
+    - name: add conf 3
+      lineinfile:
+        path: /etc/my.cnf
+        line: "innodb_file_per_table=true"
+        state: present
+    - name: add conf 4
+      lineinfile:
+        path: /etc/my.cnf
+        line: "innodb_large_prefix=true"
+        state: present
       service:
         name: mariadb
         state: restarted

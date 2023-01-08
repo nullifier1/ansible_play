@@ -1,4 +1,4 @@
-nfs_shared_dir: "~/gogs-repositories"
+nfs_shared_dir: "/home/user/gogs-repositories"
 nfs_user: "user"
 nfs_group: "user"
 nfs_client_ip1: "10.26.0.134"

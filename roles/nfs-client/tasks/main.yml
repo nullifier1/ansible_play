@@ -13,6 +13,8 @@
         owner: "{{ nfs_user }}"
         group: "{{ nfs_group }}"
         mode: 0775
+    - name: allow firewall
+      shell: firewall-cmd --zone=public --add-port=2049/tcp --permanent
     - name: Mount NFS share
       mount:
         path: "{{ nfs_mount_point }}"
@@ -20,21 +22,25 @@
         fstype: nfs
         state: mounted
         opts: rw,sync,hard,intr
+    - name: delete past gogs
+      file:
+        path: /home/user/gogs
+        state: absent
     - name: install gogs
       copy:
-        src: ~/gogs
-        dest: ~/gogs
+        src: /home/user/gogs
+        dest: /home/user/gogs
     - name: create directory custom
       file:
-        path: ~/custom
+        path: /home/user/custom
         state: directory
     - name: create directory conf
       file:
-        path: ~/custom/conf
+        path: /home/user/custom/conf
         state: directory
     - name: install gogs conf
       template: 
         src: app.ini.j2
-        dest: ~/custom/conf/app.ini
+        dest: /home/user/custom/conf/app.ini
       vars:
         mariadb_ip: 10.26.0.57
