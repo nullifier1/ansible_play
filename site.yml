@@ -4,15 +4,15 @@
   roles:
     - nfs-server
 
-- hosts: nfs-client
-  become: yes
-  roles:
-    - nfs-client
-
 - hosts: mariadb
   become: yes
   roles:
     - mariadb
+
+- hosts: nfs-client
+  become: yes
+  roles:
+    - nfs-client
 
 - hosts: load-balancer
   become: yes

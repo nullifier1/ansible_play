@@ -1,11 +1,9 @@
 ---
-- name: Deploy jenkins-agent
-  tasks:
-    - name: update apt
-      apt:
+    - name: update yum
+      yum:
         update_cache: yes
     - name: install jdk
-      apt:
+      yum:
         name: default-jdk
         state: present
 

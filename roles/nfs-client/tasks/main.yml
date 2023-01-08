@@ -1,11 +1,10 @@
 ---
-    - name: Update apt
-      apt:
+    - name: Update yum
+      yum:
         update_cache: yes
-        cache_valid_time: 86400
     - name: Install NFS client package
-      apt:
-        name: nfs-common
+      yum:
+        name: nfs-utils
         state: present
     - name: Create mount point
       file:
@@ -38,4 +37,4 @@
         src: app.ini.j2
         dest: ~/custom/conf/app.ini
       vars:
-        mariadb_ip = 10.10.10.10
+        mariadb_ip: 10.26.0.57

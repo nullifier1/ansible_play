@@ -1,12 +1,11 @@
 ---
-    - name: Update apt
+    - name: Update yum
       become: yes
-      apt:
+      yum:
         update_cache: yes
-        cache_valid_time: 86400
     - name: Install NFS server package
-      apt:
-        name: nfs-kernel-server
+      yum:
+        name: nfs-utils
         state: present
     - name: Create shared directory
       file:
@@ -18,10 +17,10 @@
     - name: Add shared directory to exports
       lineinfile:
         path: /etc/exports
-        line: "{{ nfs_shared_dir }} {{ nfs_client_ip }}(rw,sync,no_subtree_check)"
+        line: "{{ nfs_shared_dir }} {{ nfs_client_ip1 }}(rw,sync,no_subtree_check) {{ nfs_client_ip2 }}(rw,sync,no_subtree_check)"
         state: present
     - name: Restart NFS server
       service:
-        name: nfs-kernel-server
+        name: nfs-utils
         state: restarted
 
