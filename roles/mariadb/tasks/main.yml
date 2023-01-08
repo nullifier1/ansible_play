@@ -1,7 +1,4 @@
 ---
-    - name: Update yum
-      yum:
-        update_cache: yes
     - name: Install pip
       yum:
         name: python3-pip
@@ -16,40 +13,27 @@
         state: present
       vars:
         ansible_python_interpreter: /usr/bin/python3
-    - name: curl mariadb
-      shell: curl -LsS https://downloads.mariadb.com/MariaDB/mariadb_repo_setup
-    - name: add mariadb to yum
-      shell: sudo bash mariadb_repo_setup --mariadb-server-version=10.6
+    - name: add mariadbrepo for new version
+      get_url:
+        url: https://downloads.mariadb.com/MariaDB/mariadb_repo_setup
+        dest: /home
+    - name: download mariadbrepo to yum
+      shell: bash /home/mariadb_repo_setup --mariadb-server-version=10.6
+    - name: update yum
+      yum:
+        update_cache: yes
     - name: Install MariaDB
       yum:
         name: mariadb-server
+        state: present
+    - name: install mariadb-client
+      yum:
+        name: MariaDB-client
         state: present
     - name: Start MariaDB
       service:
         name: mariadb
         state: started
-    - name: Create MariaDb database
-      mysql_db:
-        name: "{{ mariadb_database }}"
-        state: present
-      vars:
-        ansible_python_interpreter: /usr/bin/python3
-    - name: Create MariaDB user
-      mysql_user:
-        name: "{{ mariadb_user }}"
-        password: "{{ mariadb_password }}"
-        host: "%"
-        priv: "*.*:ALL"
-        state: present
-      vars:
-        ansible_python_interpreter: /usr/bin/python3
-    - name: Grant all privileges to MariaDB user
-      mysql_user:
-        name: "{{ mariadb_user }}"
-        priv: "{{ mariadb_database }}.*:ALL"
-        state: present
-      vars:
-        ansible_python_interpreter: /usr/bin/python3
     - name: Set MariaDB bind address
       lineinfile:
         path: /etc/my.cnf.d/server.cnf
@@ -59,28 +43,44 @@
       shell: firewall-cmd --zone=public --add-port=3306/tcp --permanent
     - name: reload firewall
       shell: firewall-cmd --reload
-    - name: Restart mysql
-    - name: add required confs
-      lineinfile:
+    - name: remove old conf file
+      file:
         path: /etc/my.cnf
-        line: "innodb_default_row_format=dynamic"
-        state: present
-    - name: add conf 2
-      lineinfile:
-        path: /etc/my.cnf
-        line: "innodb_file_format=barracuda"
-        state: present
-    - name: add conf 3
-      lineinfile:
-        path: /etc/my.cnf
-        line: "innodb_file_per_table=true"
-        state: present
-    - name: add conf 4
-      lineinfile:
-        path: /etc/my.cnf
-        line: "innodb_large_prefix=true"
-        state: present
+        state: absent
+    - name: copy conf template
+      template:
+        src: my.cnf.j2
+        dest: /etc/my.cnf
+    - name: restart mariadb
       service:
         name: mariadb
         state: restarted
-
+    - name: Create database
+      mysql_db:
+        login_unix_socket: /var/lib/mysql/mysql.sock
+        name: "{{ mariadb_database }}"
+        state: present
+      vars:
+        ansible_python_interpreter: /usr/bin/python3
+    - name: create mariadb user
+      mysql_user:
+        login_unix_socket: /var/lib/mysql/mysql.sock
+        name: "{{ mariadb_user }}"
+        password: "{{ mariadb_password }}"
+        host: "%"
+        priv: "*.*:ALL"
+        state: present
+      vars:
+        ansible_python_interpreter: /usr/bin/python3
+    - name: grant all privileges to mariadb user
+      mysql_user:
+        login_unix_socket: /var/lib/mysql/mysql.sock
+        name: "{{ mariadb_user }}"
+        priv: "{{ mariadb_database }}.*:ALL"
+        state: present
+      vars:
+        ansible_python_interpreter: /usr/bin/python3
+    - name: reload mariadb
+      service:
+        name: mariadb
+        state: restarted
