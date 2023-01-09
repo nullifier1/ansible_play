@@ -13,8 +13,12 @@
         owner: "{{ nfs_user }}"
         group: "{{ nfs_group }}"
         mode: 0775
-    - name: allow firewall
+    - name: allow firewall to 2049
       shell: firewall-cmd --zone=public --add-port=2049/tcp --permanent
+    - name: allow firewall to gogs port
+      shell: firewall-cmd --zone=public --add-port=3000/tcp --permanent
+    - name: reload firewall
+      shell: firewall-cmd --reload
     - name: Mount NFS share
       mount:
         path: "{{ nfs_mount_point }}"
@@ -30,6 +34,12 @@
       copy:
         src: /home/user/gogs
         dest: /home/user/gogs
+    - name: change file owner and group to user and change mod to 775
+      file:
+        path: /home/user/gogs
+        owner: user
+        group: user
+        mode: 775
     - name: create directory custom
       file:
         path: /home/user/custom
@@ -44,3 +54,5 @@
         dest: /home/user/custom/conf/app.ini
       vars:
         mariadb_ip: 10.26.0.57
+    - name: start gogs
+      shell: /home/user/gogs web > /dev/null 2>&1 &

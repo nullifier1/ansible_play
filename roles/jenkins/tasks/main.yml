@@ -1,12 +1,16 @@
 ---
     - name: install Java
       yum:
-        name: default-jdk
+        name: java-11-openjdk
+        state: present
+    - name: install wget
+      yum:
+        name: wget
         state: present
     - name: add jenkins repo
-      shell: curl --silent --location http://pkg.jenkins-ci.org/redhat-stable/jenkins.repo | sudo tee /etc/yum.repos.d/jenkins.repo
+      shell: wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
     - name: update jenkins
-      shell: rpm --import https://jenkins-ci.org/redhat/jenkins-ci.org.key
+      shell: rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
     - name: update yum
       yum:
         update_cache: yes
@@ -18,12 +22,12 @@
         - jenkins
     - name: Copy jenkins conf
       copy:
-        src: ~/jenkins-config.tar.gz
-        dest: ~/jenkins-config.tar.gz
+        src: /home/user/jenkins-conf.tar.gz
+        dest: /mnt/jenkins/jenkins-conf.tar.gz
     - name: Copy jenkins home
       copy:
-        src: ~/jenkins-home.tar.gz
-        dest: ~/jenkins-home.tar.gz
+        src: /home/user/jenkins-home.tar.gz
+        dest: /mnt/jenkins/jenkins-home.tar.gz
     - name: Stop Jenkins service
       service:
         name: jenkins
@@ -33,7 +37,7 @@
         path: /var/lib/jenkins/home
         state: absent
     - name: Extract Jenkins home directory from backup
-      shell: tar xzf ~/jenkins-home.tar.gz -C /
+      shell: tar xzf /mnt/jenkins/jenkins-home.tar.gz -C /
     - name: Remove existing Jenkins configuration files
       file:
         path: /etc/default/jenkins
@@ -45,7 +49,9 @@
         path: /etc/init.d/jenkins
         state: absent
     - name: Extract Jenkins configuration files from backup
-      shell: tar xzf ~/jenkins-config.tar.gz -C /
+      shell: tar xzf /mnt/jenkins/jenkins-conf.tar.gz -C /
+    - name: allow firewall to 8080
+      shell: firewall-cmd --zone=public --add-port=8080/tcp --permanent
     - name: Start Jenkins service
       service:
         name: jenkins

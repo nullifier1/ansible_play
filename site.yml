@@ -1,8 +1,8 @@
 ---
-#- hosts: nfs-server
-#  become: yes
-#  roles:
-#    - nfs-server
+- hosts: nfs-server
+  become: yes
+  roles:
+    - nfs-server
 
 - hosts: mariadb
   become: yes

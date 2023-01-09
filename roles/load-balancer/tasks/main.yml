@@ -2,6 +2,10 @@
     - name: Update yum
       yum:
         update_cache: yes
+    - name: add epel repo
+      yum:
+        name: epel-release
+        state: present
     - name: Install nginx
       yum:
         name: nginx
@@ -17,5 +21,9 @@
       vars:
         app1_ip: 10.26.0.134
         app2_ip: 10.26.0.107
+    - name: accept traffic to 8080
+      shell: firewall-cmd --zone=public --add-port=8080/tcp --permanent
+    - name: reload firewall
+      shell: firewall-cmd --reload
     - name: Restart nginx
       service: name=nginx state=restarted enabled=yes
