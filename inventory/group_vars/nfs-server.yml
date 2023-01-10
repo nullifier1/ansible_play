@@ -1,6 +1,6 @@
 nfs_shared_dir: "/home/user/gogs-repositories"
 nfs_user: "user"
 nfs_group: "user"
-nfs_client_ip1: "10.26.0.134"
-nfs_client_ip2: "10.26.0.107"
+nfs_client_ip1: "10.26.0.140"
+nfs_client_ip2: "10.26.0.87"
 

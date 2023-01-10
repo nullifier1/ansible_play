@@ -4,6 +4,6 @@
         update_cache: yes
     - name: install jdk
       yum:
-        name: default-jdk
+        name: java-11-openjdk
         state: present
 

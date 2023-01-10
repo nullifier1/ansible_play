@@ -6,6 +6,10 @@
       yum:
         name: nfs-utils
         state: present
+    - name: install git
+      yum:
+        name: git
+        state: present
     - name: Create mount point
       file:
         path: "{{ nfs_mount_point }}"
@@ -34,12 +38,15 @@
       copy:
         src: /home/user/gogs
         dest: /home/user/gogs
-    - name: change file owner and group to user and change mod to 775
+    - name: change file owner and group to user
       file:
         path: /home/user/gogs
         owner: user
         group: user
-        mode: 775
+    - name: change gogs mod to 775
+      file:
+        path: /home/user/gogs
+        mode: 0775
     - name: create directory custom
       file:
         path: /home/user/custom
@@ -53,6 +60,19 @@
         src: app.ini.j2
         dest: /home/user/custom/conf/app.ini
       vars:
-        mariadb_ip: 10.26.0.57
+        mariadb_ip: 10.26.0.61
+    - name: install gogs start script
+      template:
+        src: start-gogs.sh.j2
+        dest: /home/user/start-gogs.sh
+    - name: change mode of script
+      file:
+        path: /home/user/start-gogs.sh
+        owner: user
+        group: user
+        mode: 0775
     - name: start gogs
-      shell: /home/user/gogs web > /dev/null 2>&1 &
+      shell: /home/user/start-gogs.sh
+      async: 5
+      poll: 0
+ 

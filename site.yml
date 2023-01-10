@@ -1,8 +1,8 @@
 ---
-- hosts: nfs-server
+- hosts: nfs-client
   become: yes
   roles:
-    - nfs-server
+    - nfs-client
 
 - hosts: mariadb
   become: yes
