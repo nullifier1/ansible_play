@@ -3,6 +3,10 @@
       yum:
         name: java-11-openjdk
         state: present
+    - name: install git
+      yum:
+        name: git
+        state: present
     - name: install wget
       yum:
         name: wget

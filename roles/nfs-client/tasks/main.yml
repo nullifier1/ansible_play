@@ -59,8 +59,6 @@
       template: 
         src: app.ini.j2
         dest: /home/jenkins/gogs/custom/conf/app.ini
-      vars:
-        mariadb_ip: 10.26.0.168
     - name: install gogs start script
       template:
         src: start-gogs.sh.j2

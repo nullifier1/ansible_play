@@ -1,8 +1,8 @@
 ---
-- hosts: nfs-server
-  become: yes
-  roles:
-    - nfs-server
+#- hosts: nfs-server
+#  become: yes
+#  roles:
+#    - nfs-server
 
 - hosts: mariadb
   become: yes
@@ -11,11 +11,16 @@
 
 - hosts: nfs-client
   become: yes
+  vars:
+    mariadb_ip: 10.26.0.168
   roles:
     - nfs-client
 
 - hosts: load-balancer
   become: yes
+  vars:
+    app1_ip: 10.26.0.57
+    app2_ip: 10.26.0.71
   roles:
     - load-balancer
 
@@ -24,7 +29,3 @@
   roles:
     - jenkins
 
-- hosts: jenkins-agent
-  become: yes
-  roles:
-    - jenkins-agent
