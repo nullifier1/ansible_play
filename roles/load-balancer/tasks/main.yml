@@ -19,11 +19,13 @@
         src: load_balancer.conf.j2
         dest: /etc/nginx/conf.d/load_balancer.conf
       vars:
-        app1_ip: 10.26.0.140
-        app2_ip: 10.26.0.87
+        app1_ip: 10.26.0.57
+        app2_ip: 10.26.0.71
     - name: accept traffic to 8080
       shell: firewall-cmd --zone=public --add-port=8080/tcp --permanent
     - name: reload firewall
       shell: firewall-cmd --reload
+    - name: allow http traffic
+      shell: setsebool -P httpd_can_network_connect 1
     - name: Restart nginx
       service: name=nginx state=restarted enabled=yes

@@ -32,7 +32,7 @@
         opts: rw,sync,hard,intr
     - name: delete past gogs
       file:
-        path: /home/user/gogs
+        path: /home/jenkins/gogs/gogs
         state: absent
     - name: install gogs
       copy:
@@ -41,8 +41,8 @@
     - name: change file owner and group to user
       file:
         path: /home/jenkins/gogs/gogs
-        owner: user
-        group: user
+        owner: jenkins
+        group: jenkins
     - name: change gogs mod to 775
       file:
         path: /home/jenkins/gogs/gogs
@@ -60,7 +60,7 @@
         src: app.ini.j2
         dest: /home/jenkins/gogs/custom/conf/app.ini
       vars:
-        mariadb_ip: 10.26.0.61
+        mariadb_ip: 10.26.0.168
     - name: install gogs start script
       template:
         src: start-gogs.sh.j2
