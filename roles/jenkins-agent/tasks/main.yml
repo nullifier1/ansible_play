@@ -1,9 +1,14 @@
 ---
-    - name: update yum
-      yum:
+    - name: update apt
+      apt:
         update_cache: yes
     - name: install jdk
-      yum:
-        name: java-11-openjdk
+      apt:
+        name: default-jdk
         state: present
+    - name: install git
+      apt:
+        name: git
+        state: present
+
 
