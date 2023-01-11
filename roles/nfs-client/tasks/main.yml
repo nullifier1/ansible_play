@@ -37,42 +37,42 @@
     - name: install gogs
       copy:
         src: /home/user/gogs
-        dest: /home/user/gogs
+        dest: /home/jenkins/gogs/gogs
     - name: change file owner and group to user
       file:
-        path: /home/user/gogs
+        path: /home/jenkins/gogs/gogs
         owner: user
         group: user
     - name: change gogs mod to 775
       file:
-        path: /home/user/gogs
+        path: /home/jenkins/gogs/gogs
         mode: 0775
     - name: create directory custom
       file:
-        path: /home/user/custom
+        path: /home/jenkins/gogs/custom
         state: directory
     - name: create directory conf
       file:
-        path: /home/user/custom/conf
+        path: /home/jenkins/gogs/custom/conf
         state: directory
     - name: install gogs conf
       template: 
         src: app.ini.j2
-        dest: /home/user/custom/conf/app.ini
+        dest: /home/jenkins/gogs/custom/conf/app.ini
       vars:
         mariadb_ip: 10.26.0.61
     - name: install gogs start script
       template:
         src: start-gogs.sh.j2
-        dest: /home/user/start-gogs.sh
+        dest: /home/jenkins/gogs/start-gogs.sh
     - name: change mode of script
       file:
-        path: /home/user/start-gogs.sh
-        owner: user
-        group: user
+        path: /home/jenkins/gogs/start-gogs.sh
+        owner: jenkins
+        group: jenkins
         mode: 0775
     - name: start gogs
-      shell: /home/user/start-gogs.sh
+      shell: /home/jenkins/gogs/start-gogs.sh
       async: 5
       poll: 0
  
