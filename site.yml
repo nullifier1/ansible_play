@@ -1,8 +1,8 @@
 ---
-#- hosts: nfs-server
-#  become: yes
-#  roles:
-#    - nfs-server
+- hosts: nfs-server
+  become: yes
+  roles:
+    - nfs-server
 
 - hosts: mariadb
   become: yes
@@ -12,15 +12,15 @@
 - hosts: nfs-client
   become: yes
   vars:
-    mariadb_ip: 10.26.0.168
+    mariadb_ip: 10.26.0.185
   roles:
     - nfs-client
 
 - hosts: load-balancer
   become: yes
   vars:
-    app1_ip: 10.26.0.57
-    app2_ip: 10.26.0.71
+    app1_ip: 10.26.0.183
+    app2_ip: 10.26.0.184
   roles:
     - load-balancer
 

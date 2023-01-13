@@ -12,8 +12,9 @@
         path: "{{ nfs_shared_dir }}"
         owner: "{{ nfs_user }}"
         group: "{{ nfs_group }}"
-        mode: 0775
+        mode: 0557
         state: directory
+        recurse: True
     - name: Add shared directory to exports
       lineinfile:
         path: /etc/exports

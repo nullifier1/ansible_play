@@ -16,7 +16,7 @@
         state: directory
         owner: "{{ nfs_user }}"
         group: "{{ nfs_group }}"
-        mode: 0775
+        mode: 0557
     - name: allow firewall to 2049
       shell: firewall-cmd --zone=public --add-port=2049/tcp --permanent
     - name: allow firewall to gogs port
@@ -46,7 +46,7 @@
     - name: change gogs mod to 775
       file:
         path: /home/jenkins/gogs/gogs
-        mode: 0775
+        mode: 0557
     - name: create directory custom
       file:
         path: /home/jenkins/gogs/custom
@@ -69,8 +69,10 @@
         owner: jenkins
         group: jenkins
         mode: 0775
-    - name: start gogs
+    - name: send gogs info to mariadb
       shell: /home/jenkins/gogs/start-gogs.sh
       async: 5
       poll: 0
- 
+    - name: start gogs
+      shell: /home/jenkins/gogs/start-gogs.sh
+
