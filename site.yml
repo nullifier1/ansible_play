@@ -9,18 +9,26 @@
   roles:
     - mariadb
 
-- hosts: nfs-client
+- hosts: nfs-client1:nfs-client2
   become: yes
   vars:
-    mariadb_ip: 10.26.0.185
+    mariadb_ip: 10.26.0.196
   roles:
     - nfs-client
 
+- hosts: nfs-client1
+  become: yes
+  roles:
+    - gogs-launch
+- hosts: nfs-client2
+  become: yes
+  roles:
+    - gogs-launch
 - hosts: load-balancer
   become: yes
   vars:
-    app1_ip: 10.26.0.183
-    app2_ip: 10.26.0.184
+    app1_ip: 10.26.0.193
+    app2_ip: 10.26.0.195
   roles:
     - load-balancer
 

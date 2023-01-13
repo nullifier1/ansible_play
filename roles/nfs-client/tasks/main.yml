@@ -69,10 +69,3 @@
         owner: jenkins
         group: jenkins
         mode: 0775
-    - name: send gogs info to mariadb
-      shell: /home/jenkins/gogs/start-gogs.sh
-      async: 5
-      poll: 0
-    - name: start gogs
-      shell: /home/jenkins/gogs/start-gogs.sh
-

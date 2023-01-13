@@ -1,6 +1,5 @@
+nfs_mount_point: "/home/jenkins/gogs/gogs-repositories"
+nfs_server_ip: "10.26.0.194"
 nfs_shared_dir: "/home/jenkins/gogs/gogs-repositories"
 nfs_user: "jenkins"
 nfs_group: "jenkins"
-nfs_client_ip1: "10.26.0.193"
-nfs_client_ip2: "10.26.0.195"
-
