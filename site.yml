@@ -12,7 +12,7 @@
 - hosts: nfs-client1:nfs-client2
   become: yes
   vars:
-    mariadb_ip: 10.26.0.196
+    mariadb_ip: 10.26.0.191
   roles:
     - nfs-client
 
