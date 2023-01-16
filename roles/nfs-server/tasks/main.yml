@@ -26,8 +26,6 @@
         line: "{{ nfs_shared_dir }} {{ nfs_client_ip2 }}(rw,sync,no_subtree_check)"
     - name: allow connection to 2049
       shell: firewall-cmd --zone=public --add-port=2049/tcp --permanent
-    - name: allow connection to 111
-      shell: firewall-cmd --zone=public --add-port=111/tcp --permanent
     - name: add mountd
       shell: firewall-cmd --zone=public --permanent --add-service=mountd
     - name: add rpc
