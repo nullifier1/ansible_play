@@ -3,6 +3,6 @@
   shell: /home/jenkins/gogs/start-gogs.sh
   async: 5
   poll: 0
-- name: sleep 5 seconds
+- name: sleep 6 seconds
   pause:
     seconds: 5
